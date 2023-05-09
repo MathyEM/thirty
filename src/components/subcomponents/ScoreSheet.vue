@@ -23,7 +23,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.player-name-wrapper {
+.player-name-wrapper, .score {
   border-bottom: 1px solid black;
+  padding: 0.2em;
+  
 }
 </style>

@@ -1,0 +1,12 @@
+1. du kommer ind på score tracking siden
+2. man starter begge to med 30 point
+3. klik "rul terninger"
+4. alle 6 terninger ruller
+5. brugeren klikker på én eller flere terninger, som den vil beholde - valgte terninger fryses
+6. der skrives nuværende sum af "holdte" terninger, hver gang en terning fryses - sæt denne optælling lige over terningernes placering
+7. brugeren klikker "rul terninger" og alle ikke-frosne terninger ruller igen
+8. trin 5-7 gentages, til alle terninger er indefrosne
+9. hvis spilleren har under 30 som sum af alle holdte terninger, mister spilleren X antal point/liv: X=30-SUM
+10. hvis spilleren har over 30 i sum, skal de nu rulle terninger igen og holde på Y-terninger: Y=SUM-30
+11. spilleren ruller til de ikke kan slå flere af Y
+12. Summen af spillerens Y-terninger fratrækkes nu den anden spillers score/liv
