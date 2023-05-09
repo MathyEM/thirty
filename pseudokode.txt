@@ -10,3 +10,10 @@
 10. hvis spilleren har over 30 i sum, skal de nu rulle terninger igen og holde på Y-terninger: Y=SUM-30
 11. spilleren ruller til de ikke kan slå flere af Y
 12. Summen af spillerens Y-terninger fratrækkes nu den anden spillers score/liv
+
+TODO:
+:checkmark: - don't allow unfreezing of dice that were frozen in previous rolls 
+- force player to freeze at least one dice
+- roll damage in case sum is 30+
+- reduce score/hp for relevant player
+- 

@@ -3,7 +3,7 @@
     <h1>Score tracking page</h1>
     <div class="score-sheets-container">
       <ScoreSheet v-for="(player, index) in getPlayers" :key="index" :score="player.score">
-        <template v-slot:name>{{ player.name }}</template>
+        <template v-slot:name><span class="activity-indicator" v-if="player.activeTurn">⦿</span><span class="player-name">{{ player.name }}</span></template>
       </ScoreSheet>
     </div>
     <div class="dice-sum">
@@ -12,7 +12,8 @@
     <div class="dice-container">
       <Dice v-for="n in 6" :key="n" :diceIndex="n" />
     </div>
-    <button @click="rollDice">roll all the dice</button>
+    <button v-if="getFreezeQuotaMet" @click="rollDice">roll all the dice</button>
+    <button v-else disabled>Rul terninger</button>
   </div>
 </template>
 
@@ -33,7 +34,8 @@ export default {
   computed: {
     ...mapGetters([
       'getPlayers',
-      'getDiceSum'
+      'getDiceSum',
+      'getFreezeQuotaMet',
     ])
   },
   methods: {
@@ -55,6 +57,16 @@ export default {
   >:first-child {
     border-right: 1px solid black;
   }
+}
+
+.activity-indicator {
+  font-size: 1em;
+  color: green;
+  margin-right: 0.5em;
+}
+
+.player-name {
+  padding: 0.1em 0;
 }
 
 .dice-sum {

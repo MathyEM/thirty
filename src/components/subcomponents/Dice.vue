@@ -22,10 +22,10 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'FREEZE_DICE',
+      'TOGGLE_FREEZE_DICE',
     ]),
     freezeDice() {
-      this.FREEZE_DICE(this.diceIndex-1)
+      this.TOGGLE_FREEZE_DICE(this.diceIndex-1)
     },
   },
   computed: {

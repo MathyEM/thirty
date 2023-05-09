@@ -9,45 +9,58 @@ export default createStore({
         score: [
           "30",
         ],
+        activeTurn: true,
       },
       {
         name: "Tenna",
         score: [
           "30",
         ],
+        activeTurn: false,
       },
     ],
+    freezeQuotaMet: true,
     dice: [
       {
         num: 1,
         frozen: false,
+        locked: false,
       },
       {
         num: 2,
         frozen: false,
+        locked: false,
       },
       {
         num: 3,
         frozen: false,
+        locked: false,
       },
       {
         num: 4,
         frozen: false,
+        locked: false,
       },
       {
         num: 5,
         frozen: false,
+        locked: false,
       },
       {
         num: 6,
         frozen: false,
+        locked: false,
       },
     ],
+    //
+    // REQUIRE AT LEAST ONE DICE FREEZE PER ROUND
+    //
     disableDice: true,
   },
   getters: {
     getShowModal: state => state.showModal,
     getPlayers: state => state.players,
+    getFreezeQuotaMet: state => state.freezeQuotaMet,
     getDice: state => state.dice,
     getDiceSum: state => {
       let sum = 0
@@ -74,15 +87,23 @@ export default createStore({
     SET_DICE(state, {index, value}) {
       state.dice[index].num = value
     },
-    FREEZE_DICE(state, index) {
-      if (state.disableDice) {
+    TOGGLE_FREEZE_DICE(state, index) {
+      if (state.disableDice || state.dice[index].locked) {
         return
       }
       if (state.dice[index].frozen) {
         state.dice[index].frozen = false
+        state.freezeQuotaMet = true
       } else {
         state.dice[index].frozen = true
+        state.freezeQuotaMet = true
       }
+    },
+    FREEZE_QUOTA_MET(state, value) {
+      state.freezeQuotaMet = value
+    },
+    UNLOCK_DICE(state, index) {
+      state.dice[index].locked = false
     },
     ENABLE_DICE(state) {
       state.disableDice = false
@@ -112,8 +133,10 @@ export default createStore({
       }, 100);
     },
     rollDice({ dispatch, commit, getters }) {
+      commit("FREEZE_QUOTA_MET", false);
       for (let i = 0; i < 6; i++) {
         if (getters.getDice[i].frozen) {
+          getters.getDice[i].locked = true
           continue;
         }
         dispatch("setDice", i)

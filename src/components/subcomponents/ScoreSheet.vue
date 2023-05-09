@@ -26,6 +26,12 @@ export default {
 .player-name-wrapper, .score {
   border-bottom: 1px solid black;
   padding: 0.2em;
-  
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.player-name-wrapper {
+  padding: 0;
 }
 </style>
