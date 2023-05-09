@@ -20,34 +20,45 @@ export default createStore({
     dice: [
       {
         num: 1,
-        frozen: true,
+        frozen: false,
       },
       {
         num: 2,
-        frozen: true,
+        frozen: false,
       },
       {
         num: 3,
-        frozen: true,
+        frozen: false,
       },
       {
         num: 4,
-        frozen: true,
+        frozen: false,
       },
       {
         num: 5,
-        frozen: true,
+        frozen: false,
       },
       {
         num: 6,
-        frozen: true,
+        frozen: false,
       },
-    ]
+    ],
+    disableDice: true,
   },
   getters: {
     getShowModal: state => state.showModal,
     getPlayers: state => state.players,
     getDice: state => state.dice,
+    getDiceSum: state => {
+      let sum = 0
+      for (let i = 0; i < state.dice.length; i++) {
+        const num = state.dice[i].num;
+        if (state.dice[i].frozen) {
+          sum = sum+num
+        }
+      }
+      return sum
+    }
   },
   mutations: {
     TOGGLE_SHOW_MODAL(state) {
@@ -64,12 +75,18 @@ export default createStore({
       state.dice[index].num = value
     },
     FREEZE_DICE(state, index) {
+      if (state.disableDice) {
+        return
+      }
       if (state.dice[index].frozen) {
         state.dice[index].frozen = false
       } else {
         state.dice[index].frozen = true
       }
     },
+    ENABLE_DICE(state) {
+      state.disableDice = false
+    }
   },
   actions: {
     ToggleShowModal({ commit }) {
@@ -82,7 +99,6 @@ export default createStore({
     },
     setRandomDiceData({ commit }, index) {
       const value = Math.floor(Math.random() * 6) + 1;
-      console.log(index, value);
       commit("SET_DICE", { index, value })
     },
     setDice({ dispatch }, index) {
@@ -93,7 +109,16 @@ export default createStore({
           clearInterval(timer);
         }
         count += 1;
-      }, 150);
+      }, 100);
+    },
+    rollDice({ dispatch, commit, getters }) {
+      for (let i = 0; i < 6; i++) {
+        if (getters.getDice[i].frozen) {
+          continue;
+        }
+        dispatch("setDice", i)
+      }
+      commit('ENABLE_DICE')
     }
   }
 })

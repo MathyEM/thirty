@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   name: "TheDice",
   props: {
@@ -21,8 +21,11 @@ export default {
     };
   },
   methods: {
-    freezeDice(e) {
-      e
+    ...mapMutations([
+      'FREEZE_DICE',
+    ]),
+    freezeDice() {
+      this.FREEZE_DICE(this.diceIndex-1)
     },
   },
   computed: {
@@ -69,6 +72,7 @@ button {
   padding-left: 1em;
   background-size: 1em;
   background-repeat: no-repeat;
+  cursor: pointer;
 
   .frozen-checkmark {
     position: absolute;
@@ -76,6 +80,7 @@ button {
     top: 0;
     left: 0;
     transform: translateX(100%) translateY(-100%);
+    user-select: none;
   }
 }
 .dice-1 {

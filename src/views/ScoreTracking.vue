@@ -6,6 +6,9 @@
         <template v-slot:name>{{ player.name }}</template>
       </ScoreSheet>
     </div>
+    <div class="dice-sum">
+      <h3>Sum af låste terninger: {{ getDiceSum }}</h3>
+    </div>
     <div class="dice-container">
       <Dice v-for="n in 6" :key="n" :diceIndex="n" />
     </div>
@@ -29,19 +32,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getPlayers'
+      'getPlayers',
+      'getDiceSum'
     ])
   },
   methods: {
     ...mapActions([
-      'setDice',
+      'rollDice',
     ]),
-    rollDice() {
-      for (let i = 0; i < 6; i++) {
-        this.setDice(i)
-        console.log("rolled: " + i);
-      }
-    }
   }
 }
 </script>
@@ -58,6 +56,11 @@ export default {
     border-right: 1px solid black;
   }
 }
+
+.dice-sum {
+  margin: 0 auto 2em auto;
+}
+
 .dice-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
