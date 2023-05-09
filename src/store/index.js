@@ -81,10 +81,10 @@ export default createStore({
       return count
     },
     getIsRollingAttack: state => {
-      state.isRollingAttack
+      return state.isRollingAttack
     },
     getAttackDiceTarget: state => {
-      state.attackDiceTarget
+      return state.attackDiceTarget
     },
     getActivePlayerIndex: state => {
       return state.players.findIndex( player => player.activeTurn == true)
@@ -113,6 +113,7 @@ export default createStore({
     },
     TOGGLE_FREEZE_DICE(state, index) { // freezeQuotaMet handled here
       if ((state.disableDice || state.dice[index].locked) && !state.isRollingAttack) {
+        console.log("not rolling attack");
         return
       }
       if (state.dice[index].frozen) {
@@ -122,6 +123,9 @@ export default createStore({
         state.dice[index].frozen = true
         state.freezeQuotaMet = true
       }
+    },
+    UNFREEZE_DICE(state, index) {
+      state.dice[index].frozen = false
     },
     FREEZE_QUOTA_MET(state, value) {
       state.freezeQuotaMet = value
@@ -181,28 +185,40 @@ export default createStore({
       }
       commit('ENABLE_DICE')
     },
-    freezeDice({ dispatch, commit, getters }, index) {
-      dispatch
-      commit('TOGGLE_FREEZE_DICE', index)
-      getters
-
+    freezeDice({ commit, getters }, index) {
+      if (!getters.getIsRollingAttack) {
+        return commit('TOGGLE_FREEZE_DICE', index)
+      }
+      if (getters.getDice[index].num != getters.getAttackDiceTarget) {
+        return
+      }
+      return commit('TOGGLE_FREEZE_DICE', index)
     },
     unfreezeAllDice({ getters, commit }) {
       for (let i = 0; i < getters.getDice.length; i++) {
-        commit('TOGGLE_FREEZE_DICE', i)
+        commit('UNFREEZE_DICE', i)
       }
     },
-    resetallDice({ commit }) {
+    unlockAllDice({ getters, commit }) {
+      for (let i = 0; i < getters.getDice.length; i++) {
+        commit('UNLOCK_DICE', i)
+      }
+    },
+    resetAllDice({ commit, dispatch }) {
       for (let i = 0; i < this.getters.getDice.length; i++) {
         commit('SET_DICE', { index: i, value: i+1 })
       }
+      dispatch("unlockAllDice")
+      dispatch("unfreezeAllDice")
+      commit("DISABLE_DICE")
+      commit("SET_IS_ROLLING_ATTACK", false)
     },
     endTurn({ getters, commit, dispatch }) {
       const disableIndex = getters.getActivePlayerIndex
       const enableIndex = getters.getInactivePlayerIndex
 
       commit('UPDATE_ACTIVE_PLAYER', { disableIndex, enableIndex })
-      dispatch('unfreezeAllDice')
+      dispatch('resetAllDice')
     },
     rollAttackDice({ dispatch, commit, getters }) {
       const attackDiceTarget = getters.getDiceSum-30
@@ -211,14 +227,11 @@ export default createStore({
 
       if (attackDiceTarget == 0) { // if their sum is 30, the turn just ends
         dispatch('endTurn')
-        console.log("exactly 0");
       } else if (attackDiceTarget < 0) { // if the sum is less than 30, the damage themselves
         commit('REDUCE_HEALTH', { index: activePlayerIndex, value: attackDiceTarget })
         dispatch('endTurn')
         commit('SET_ATTACK_DICE_TARGET', null)
-        console.log("below 0");
       } else { // if their sum is 30+ then let them roll attack
-        console.log(attackDiceTarget, attackDiceTarget < 0);
         commit('SET_IS_ROLLING_ATTACK', true)
         dispatch('unfreezeAllDice')
         dispatch('rollDice')

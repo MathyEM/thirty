@@ -14,6 +14,5 @@
 TODO:
 :checkmark: - don't allow unfreezing of dice that were frozen in previous rolls 
 :checkmark: - force player to freeze at least one dice
+:checkmark: - do self damage if sum is below 30
 - roll damage in case sum is 30+
-- reduce score/hp for relevant player
-- 
