@@ -13,7 +13,7 @@
 
 TODO:
 :checkmark: - don't allow unfreezing of dice that were frozen in previous rolls 
-- force player to freeze at least one dice
+:checkmark: - force player to freeze at least one dice
 - roll damage in case sum is 30+
 - reduce score/hp for relevant player
 - 

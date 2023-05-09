@@ -6,20 +6,18 @@ export default createStore({
     players: [
       {
         name: "Mathias",
-        score: [
-          "30",
-        ],
+        score: 30,
         activeTurn: true,
       },
       {
         name: "Tenna",
-        score: [
-          "30",
-        ],
+        score: 30,
         activeTurn: false,
       },
     ],
     freezeQuotaMet: true,
+    isRollingAttack: false,
+    attackDiceTarget: null,
     dice: [
       {
         num: 1,
@@ -71,6 +69,28 @@ export default createStore({
         }
       }
       return sum
+    },
+    getFrozenDiceCount: state => {
+      let count = 0;
+      for (let i = 0; i < state.dice.length; i++) {
+        const dice = state.dice[i];
+        if (dice.frozen) {
+          count++
+        }
+      }
+      return count
+    },
+    getIsRollingAttack: state => {
+      state.isRollingAttack
+    },
+    getAttackDiceTarget: state => {
+      state.attackDiceTarget
+    },
+    getActivePlayerIndex: state => {
+      return state.players.findIndex( player => player.activeTurn == true)
+    },
+    getInactivePlayerIndex: state => {
+      return state.players.findIndex( player => player.activeTurn == false)
     }
   },
   mutations: {
@@ -84,11 +104,15 @@ export default createStore({
     UPDATE_PLAYER_NAME(state, {value, index}) {
       state.players[index].name = value
     },
+    UPDATE_ACTIVE_PLAYER(state, { disableIndex, enableIndex }) {
+      state.players[disableIndex].activeTurn = false
+      state.players[enableIndex].activeTurn = true
+    },
     SET_DICE(state, {index, value}) {
       state.dice[index].num = value
     },
-    TOGGLE_FREEZE_DICE(state, index) {
-      if (state.disableDice || state.dice[index].locked) {
+    TOGGLE_FREEZE_DICE(state, index) { // freezeQuotaMet handled here
+      if ((state.disableDice || state.dice[index].locked) && !state.isRollingAttack) {
         return
       }
       if (state.dice[index].frozen) {
@@ -107,7 +131,19 @@ export default createStore({
     },
     ENABLE_DICE(state) {
       state.disableDice = false
-    }
+    },
+    DISABLE_DICE(state) {
+      state.disableDice = true
+    },
+    SET_IS_ROLLING_ATTACK(state, value) {
+      state.isRollingAttack = value
+    },
+    SET_ATTACK_DICE_TARGET(state, value) {
+      state.attackDiceTarget = value
+    },
+    REDUCE_HEALTH(state, {index, value}) {
+      state.players[index].score = state.players[index].score + value
+    },
   },
   actions: {
     ToggleShowModal({ commit }) {
@@ -133,7 +169,9 @@ export default createStore({
       }, 100);
     },
     rollDice({ dispatch, commit, getters }) {
-      commit("FREEZE_QUOTA_MET", false);
+      if (getters.getFrozenDiceCount != 6) {
+        commit("FREEZE_QUOTA_MET", false)
+      }
       for (let i = 0; i < 6; i++) {
         if (getters.getDice[i].frozen) {
           getters.getDice[i].locked = true
@@ -142,6 +180,49 @@ export default createStore({
         dispatch("setDice", i)
       }
       commit('ENABLE_DICE')
-    }
+    },
+    freezeDice({ dispatch, commit, getters }, index) {
+      dispatch
+      commit('TOGGLE_FREEZE_DICE', index)
+      getters
+
+    },
+    unfreezeAllDice({ getters, commit }) {
+      for (let i = 0; i < getters.getDice.length; i++) {
+        commit('TOGGLE_FREEZE_DICE', i)
+      }
+    },
+    resetallDice({ commit }) {
+      for (let i = 0; i < this.getters.getDice.length; i++) {
+        commit('SET_DICE', { index: i, value: i+1 })
+      }
+    },
+    endTurn({ getters, commit, dispatch }) {
+      const disableIndex = getters.getActivePlayerIndex
+      const enableIndex = getters.getInactivePlayerIndex
+
+      commit('UPDATE_ACTIVE_PLAYER', { disableIndex, enableIndex })
+      dispatch('unfreezeAllDice')
+    },
+    rollAttackDice({ dispatch, commit, getters }) {
+      const attackDiceTarget = getters.getDiceSum-30
+      const activePlayerIndex = getters.getActivePlayerIndex
+      commit('SET_ATTACK_DICE_TARGET', attackDiceTarget) // find out if the active players takes their own damage or if they get to attack the other player
+
+      if (attackDiceTarget == 0) { // if their sum is 30, the turn just ends
+        dispatch('endTurn')
+        console.log("exactly 0");
+      } else if (attackDiceTarget < 0) { // if the sum is less than 30, the damage themselves
+        commit('REDUCE_HEALTH', { index: activePlayerIndex, value: attackDiceTarget })
+        dispatch('endTurn')
+        commit('SET_ATTACK_DICE_TARGET', null)
+        console.log("below 0");
+      } else { // if their sum is 30+ then let them roll attack
+        console.log(attackDiceTarget, attackDiceTarget < 0);
+        commit('SET_IS_ROLLING_ATTACK', true)
+        dispatch('unfreezeAllDice')
+        dispatch('rollDice')
+      }
+    },
   }
 })

@@ -1,7 +1,7 @@
 <template>
   <div id="dice">
     <div class="dice-wrapper">
-      <div @click="freezeDice" class="dice" :class="[diceClass, frozenClass]">
+      <div @click="freezeTheDice" class="dice" :class="[diceClass, frozenClass]">
         <span class="frozen-checkmark" v-if="getDice[diceIndex-1].frozen">✓</span>
       </div>
     </div>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: "TheDice",
   props: {
@@ -21,11 +21,11 @@ export default {
     };
   },
   methods: {
-    ...mapMutations([
-      'TOGGLE_FREEZE_DICE',
+    ...mapActions([
+      'freezeDice'
     ]),
-    freezeDice() {
-      this.TOGGLE_FREEZE_DICE(this.diceIndex-1)
+    freezeTheDice() {
+      this.freezeDice(this.diceIndex-1)
     },
   },
   computed: {
@@ -51,6 +51,7 @@ button {
   margin-right: 0;
   margin-bottom: 0;
 }
+
 .dice-wrapper {
   display: flex;
   flex-direction: column;

@@ -12,8 +12,9 @@
     <div class="dice-container">
       <Dice v-for="n in 6" :key="n" :diceIndex="n" />
     </div>
-    <button v-if="getFreezeQuotaMet" @click="rollDice">roll all the dice</button>
-    <button v-else disabled>Rul terninger</button>
+    <button v-if="getFrozenDiceCount == 6" @click="rollAttackDice">Rul angreb</button>
+    <button v-else-if="getFreezeQuotaMet && getFrozenDiceCount != 6" @click="rollDice">Rul terninger</button>
+    <button v-else disabled class="btn-disabled">Rul terninger</button>
   </div>
 </template>
 
@@ -36,18 +37,20 @@ export default {
       'getPlayers',
       'getDiceSum',
       'getFreezeQuotaMet',
+      'getFrozenDiceCount',
     ])
   },
   methods: {
     ...mapActions([
       'rollDice',
+      'rollAttackDice',
     ]),
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss">
 .score-sheets-container {
   display: grid;
   grid-template-columns: 1fr 1fr;

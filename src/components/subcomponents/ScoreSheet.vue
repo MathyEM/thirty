@@ -4,8 +4,8 @@
       <slot name="name">Insert name here</slot>
     </div>
     <div class="score">
-      <div v-for="(scoreLine, index) in score" :key="index" class="score-line">
-        {{ scoreLine }}
+      <div class="score-line">
+        {{ score }}
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 export default {
   name: 'ScoreSheet',
   props: {
-    score: Array,
+    score: Number,
   },
   
 }

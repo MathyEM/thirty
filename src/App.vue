@@ -36,4 +36,8 @@ button {
   outline: none;
   border: none;
 }
+
+.btn-disabled {
+  background: darkgray
+}
 </style>
