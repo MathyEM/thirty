@@ -20,27 +20,27 @@ export default createStore({
     dice: [
       {
         num: 1,
-        frozen: false,
+        frozen: true,
       },
       {
         num: 2,
-        frozen: false,
+        frozen: true,
       },
       {
-        num: 1,
-        frozen: false,
+        num: 3,
+        frozen: true,
       },
       {
         num: 4,
-        frozen: false,
+        frozen: true,
       },
       {
-        num: 1,
-        frozen: false,
+        num: 5,
+        frozen: true,
       },
       {
         num: 6,
-        frozen: false,
+        frozen: true,
       },
     ]
   },
@@ -62,7 +62,14 @@ export default createStore({
     },
     SET_DICE(state, {index, value}) {
       state.dice[index].num = value
-    }
+    },
+    FREEZE_DICE(state, index) {
+      if (state.dice[index].frozen) {
+        state.dice[index].frozen = false
+      } else {
+        state.dice[index].frozen = true
+      }
+    },
   },
   actions: {
     ToggleShowModal({ commit }) {
