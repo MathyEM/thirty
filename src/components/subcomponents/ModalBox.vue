@@ -1,9 +1,17 @@
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: "ModalBox",
   props: {
     show: Boolean,
     position: String,
+  },
+
+  methods: {
+    ...mapActions([
+      'ToggleShowModal',
+    ]),
   }
 }
 </script>
@@ -17,6 +25,7 @@ export default {
             <h3>
               <slot name="header">default header</slot>
             </h3>
+            <span @click="ToggleShowModal" class="close-button">✖</span>
           </div>
 
           <div class="modal-body">
@@ -80,6 +89,8 @@ export default {
     background: gray;
     color: white;
     padding: 1rem;
+    outline: none;
+    border: none;
   }
 
   p {
@@ -88,8 +99,17 @@ export default {
   }
 }
 
-.modal-header h3 {
-  margin-top: 0;
+.modal-header {
+  h3 {
+    margin-top: 0;
+  }
+  .close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.2em 0.5em;
+    cursor: pointer;
+  }
 }
 
 .modal-body {

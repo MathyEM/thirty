@@ -1,14 +1,20 @@
 <template>
   <div class="main-menu">
     <h1>Header text</h1>
-    <button>Start et spil</button>
-    <ModalBox :show="getShowModal"/>
+    <button @click="ToggleShowModal">Start et spil</button>
+    <ModalBox :show="getShowModal">
+      <template v-slot:header></template>
+      <template v-slot:body></template>
+      <template v-slot:footer>
+        <button>Start spil</button>
+      </template>
+    </ModalBox>
   </div>
 </template>
 
 <script>
 import ModalBox from "@/components/subcomponents/ModalBox.vue";
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'MainMenu',
@@ -26,7 +32,12 @@ export default {
   computed: {
     ...mapGetters([
       'getShowModal',
-    ])
+    ]),
+  },
+  methods: {
+    ...mapActions([
+      'ToggleShowModal',
+    ]),
   }
 }
 </script>
