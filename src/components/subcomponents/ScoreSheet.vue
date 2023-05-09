@@ -1,12 +1,11 @@
 <template>
-  <div class="score-tracking">
-    <h1>{{ msg }}</h1>
+  <div class="score-sheet">
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ScoreTracking',
+  name: 'ScoreSheet',
   props: {
     msg: String
   }
