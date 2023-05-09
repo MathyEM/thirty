@@ -12,8 +12,9 @@
     <div class="dice-container">
       <Dice v-for="n in 6" :key="n" :diceIndex="n" />
     </div>
-    <button v-if="getFrozenDiceCount == 6" @click="rollAttackDice">Rul angreb</button>
-    <button v-else-if="getFreezeQuotaMet && getFrozenDiceCount != 6" @click="rollDice">Rul terninger</button>
+    <button v-if="(getFrozenDiceCount == 6 && getDiceSum <= 30) || (getAttackRollStalled && getIsRollingAttack)" @click="endTurn">Afslut runde</button>
+    <button v-else-if="getFrozenDiceCount == 6" @click="rollAttackDice">Rul angreb</button>
+    <button v-else-if="(getFreezeQuotaMet && getFrozenDiceCount != 6) || getDisableDice" @click="rollDice">Rul terninger</button>
     <button v-else disabled class="btn-disabled">Rul terninger</button>
   </div>
 </template>
@@ -38,12 +39,16 @@ export default {
       'getDiceSum',
       'getFreezeQuotaMet',
       'getFrozenDiceCount',
+      'getDisableDice',
+      'getAttackRollStalled',
+      'getIsRollingAttack',
     ])
   },
   methods: {
     ...mapActions([
       'rollDice',
       'rollAttackDice',
+      'endTurn'
     ]),
   }
 }
