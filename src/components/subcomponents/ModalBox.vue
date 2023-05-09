@@ -84,19 +84,6 @@ export default {
     top: initial;
     bottom: 2rem;
   }
-
-  button {
-    background: gray;
-    color: white;
-    padding: 1rem;
-    outline: none;
-    border: none;
-  }
-
-  p {
-    display: inline-block;
-    margin: 0 0.5rem;
-  }
 }
 
 .modal-header {

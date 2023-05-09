@@ -2,10 +2,15 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    showModal: false,
+    showModal: true,
+    players: [
+      "",
+      "",
+    ],
   },
   getters: {
     getShowModal: state => state.showModal,
+    getPlayerNames: state => state.players,
   },
   mutations: {
     TOGGLE_SHOW_MODAL(state) {
@@ -15,11 +20,18 @@ export default createStore({
         state.showModal = true
       }
     },
+    UPDATE_PLAYER_NAME(state, {value, index}) {
+      state.players[index] = value
+    },
   },
   actions: {
     ToggleShowModal({ commit }) {
       commit('TOGGLE_SHOW_MODAL')
-      console.log("test");
     },
+    UpdatePlayerName({ commit }, payload) {
+      const index = payload.srcElement.id
+      const value = payload.target.value
+      commit('UPDATE_PLAYER_NAME', { value, index })
+    }
   }
 })

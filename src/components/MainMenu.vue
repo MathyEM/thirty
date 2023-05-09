@@ -1,10 +1,22 @@
 <template>
   <div class="main-menu">
-    <h1>Header text</h1>
+    <h1>Tredive</h1>
     <button @click="ToggleShowModal">Start et spil</button>
     <ModalBox :show="getShowModal">
-      <template v-slot:header></template>
-      <template v-slot:body></template>
+      <template v-slot:header>Starter et nyt spil</template>
+      <template v-slot:body>
+        <p>Indtast navnene på de to spillere</p>
+        <div class="inputs">
+          <div class="input-playername-wrapper">
+            <p>Spiller 1</p>
+            <input :value="getPlayerNames[0]" @input="UpdatePlayerName" type="text" name="spiller1" id="0" class="input-playername">
+          </div>
+          <div class="input-playername-wrapper">
+            <p>Spiller 2</p>
+            <input :value="getPlayerNames[1]" @input="UpdatePlayerName" type="text" name="spiller2" id="1" class="input-playername">
+          </div>
+        </div>
+      </template>
       <template v-slot:footer>
         <button>Start spil</button>
       </template>
@@ -32,17 +44,37 @@ export default {
   computed: {
     ...mapGetters([
       'getShowModal',
+      'getPlayerNames',
     ]),
   },
   methods: {
     ...mapActions([
       'ToggleShowModal',
+      'UpdatePlayerName',
     ]),
+    PlayerNameUpdate(e) {
+      console.log(e);
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  p {
+    margin: 0.1em;
+  }
+}
+.input-playername-wrapper {
+  padding: 1em;
+  .input-playername {
+    margin: 0.1em;
+    width: 100%;
+  }
+}
 
 </style>

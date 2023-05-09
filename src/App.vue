@@ -26,4 +26,11 @@
     }
   }
 }
+button {
+  background: gray;
+  color: white;
+  padding: 1rem;
+  outline: none;
+  border: none;
+}
 </style>
