@@ -3,22 +3,22 @@
     <h1>Tredive</h1>
     <button @click="ToggleShowModal">Start et spil</button>
     <ModalBox :show="getShowModal">
-      <template v-slot:header>Starter et nyt spil</template>
+      <template v-slot:header>Start et nyt spil</template>
       <template v-slot:body>
         <p>Indtast navnene på de to spillere</p>
         <div class="inputs">
           <div class="input-playername-wrapper">
             <p>Spiller 1</p>
-            <input :value="getPlayerNames[0]" @input="UpdatePlayerName" type="text" name="spiller1" id="0" class="input-playername">
+            <input :value="getPlayers[0].name" @input="UpdatePlayerName" type="text" name="spiller1" id="0" class="input-playername">
           </div>
           <div class="input-playername-wrapper">
             <p>Spiller 2</p>
-            <input :value="getPlayerNames[1]" @input="UpdatePlayerName" type="text" name="spiller2" id="1" class="input-playername">
+            <input :value="getPlayers[1].name" @input="UpdatePlayerName" type="text" name="spiller2" id="1" class="input-playername">
           </div>
         </div>
       </template>
       <template v-slot:footer>
-        <button>Start spil</button>
+        <button @click="$router.push('/score-tracking')">Start spil</button>
       </template>
     </ModalBox>
   </div>
@@ -44,7 +44,7 @@ export default {
   computed: {
     ...mapGetters([
       'getShowModal',
-      'getPlayerNames',
+      'getPlayers',
     ]),
   },
   methods: {

@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/HomePage.vue'
+import ScoreTracking from '../views/ScoreTracking.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/score-tracking',
+    name: 'ScoreTracking',
+    component: ScoreTracking
   },
   // {
   //   path: '/about',

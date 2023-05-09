@@ -4,13 +4,23 @@ export default createStore({
   state: {
     showModal: true,
     players: [
-      "",
-      "",
+      {
+        name: "",
+        score: [
+          "30",
+        ],
+      },
+      {
+        name: "",
+        score: [
+          "30",
+        ],
+      },
     ],
   },
   getters: {
     getShowModal: state => state.showModal,
-    getPlayerNames: state => state.players,
+    getPlayers: state => state.players,
   },
   mutations: {
     TOGGLE_SHOW_MODAL(state) {
@@ -21,7 +31,7 @@ export default createStore({
       }
     },
     UPDATE_PLAYER_NAME(state, {value, index}) {
-      state.players[index] = value
+      state.players[index].name = value
     },
   },
   actions: {
