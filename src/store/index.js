@@ -6,12 +6,12 @@ export default createStore({
     showGameOverModal: false,
     players: [
       {
-        name: "Mathias",
+        name: "",
         score: 30,
         activeTurn: true,
       },
       {
-        name: "Tenna",
+        name: "",
         score: 30,
         activeTurn: false,
       },

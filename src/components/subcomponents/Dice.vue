@@ -59,7 +59,7 @@ button {
   align-items: center;
 }
 .dice {
-  font-size: 3em;
+  font-size: 2.2em;
 }
 /*
  * Dice.css v1.0

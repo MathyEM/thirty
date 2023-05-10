@@ -32,6 +32,11 @@ export default {
 }
 
 .player-name-wrapper {
-  padding: 0;
+  padding: 0.5em 0 0 0;
+}
+
+.score {
+  padding: 0.5em;
+
 }
 </style>

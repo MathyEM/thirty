@@ -6,6 +6,10 @@
 </template>
 
 <style lang="scss">
+:root {
+  font-size: 20px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -18,7 +22,8 @@
 }
 
 #nav {
-  padding: 30px;
+  padding-bottom: 0.1em;
+  border-bottom: 1px solid black;
 
   a {
     font-weight: bold;

@@ -1,6 +1,5 @@
 <template>
   <div class="score-tracking">
-    <h1>Score tracking page</h1>
     <div class="score-sheets-container">
       <ScoreSheet v-for="(player, index) in getPlayers" :key="index" :score="player.score">
         <template v-slot:name><span class="player-name"><span class="activity-indicator" v-if="player.activeTurn">⦿</span>{{ player.name }}</span></template>
@@ -80,8 +79,8 @@ export default {
 .score-sheets-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 1em auto;
-  padding: 1em 1em;
+  margin: 0 auto;
+  padding: 0 1em;
 
   >:first-child {
     border-right: 1px solid black;
