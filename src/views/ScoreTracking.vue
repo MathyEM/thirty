@@ -17,7 +17,7 @@
     <button v-else-if="(getFreezeQuotaMet && getFrozenDiceCount != 6) || getDisableDice" @click="rollDice">Rul terninger</button>
     <button v-else disabled class="btn-disabled">Lås mindst én terning</button>
   </div>
-  <ModalBox :show="getShowGameOverModal && getGameOver" :toggleShow="ToggleShowGameOverModal">
+  <ModalBox :show="getShowGameOverModal && getGameOver" :toggleShow="ToggleShowGameOverModal" :closeButton="false">
       <template v-slot:header>{{ getPlayers[getOppositePlayerIndex].name }} vandt!</template>
       <template v-slot:body>
         <p>Men vigtigst af alt... {{ getPlayers[getLowestHealthPlayerIndex].name }} tabte</p>
@@ -25,7 +25,7 @@
         </div>
       </template>
       <template v-slot:footer>
-        <span></span>
+        <button @click="resetGame">Spil igen</button>
       </template>
     </ModalBox>
 </template>
@@ -69,6 +69,7 @@ export default {
       'endTurn',
       'findOppositePlayerIndex',
       'ToggleShowGameOverModal',
+      'resetGame',
     ]),
   }
 }

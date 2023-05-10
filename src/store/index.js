@@ -196,6 +196,9 @@ export default createStore({
     SET_ATTACK_DICE_TARGET(state, value) {
       state.attackDiceTarget = value
     },
+    SET_PLAYER_HEALTH(state, { index, value }) {
+      state.players[index].score = value
+    },
     REDUCE_HEALTH(state, {index, value}) {
       state.players[index].score = state.players[index].score + value
     },
@@ -308,6 +311,13 @@ export default createStore({
       console.log("game over");
       commit('UPDATE_GAME_OVER', { value: true })
       commit('TOGGLE_SHOW_GAME_OVER_MODAL')
+    },
+    resetGame({ dispatch, commit }) {
+      dispatch('resetAllDice')
+      commit('TOGGLE_SHOW_GAME_OVER_MODAL')
+      commit('UPDATE_ACTIVE_PLAYER', { disableIndex: 0, enableIndex: 1 })
+      commit('SET_PLAYER_HEALTH', { index: 0, value: 30 })
+      commit('SET_PLAYER_HEALTH', { index: 1, value: 30 })
     },
   }
 })

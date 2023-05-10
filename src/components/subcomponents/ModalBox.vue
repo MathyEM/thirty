@@ -5,6 +5,10 @@ export default {
     show: Boolean,
     position: String,
     toggleShow: Function,
+    closeButton: {
+      type: Boolean,
+      default: true,
+    }
   },
 
   methods: {
@@ -22,7 +26,7 @@ export default {
             <h3>
               <slot name="header">default header</slot>
             </h3>
-            <span @click="toggleShow" class="close-button">✖</span>
+            <span v-if="closeButton == true" @click="toggleShow" class="close-button">✖</span>
           </div>
 
           <div class="modal-body">

@@ -22,4 +22,5 @@ TODO:
   :checkmark: - when the are no more rolls to be made after 6 frozen dice
 :checkmark: - fix incorrect damage with attack roll
 :checkmark: - fix button showing "afslut runde" even though only one attack roll has been done
-- win/lose condition 
+:checkmark: - win/lose condition
+:checkmark: - reset room after game over
