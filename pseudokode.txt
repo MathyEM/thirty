@@ -20,4 +20,6 @@ TODO:
 :checkmark: - change roll button to "Afslut tur" when a turn is over
   :checkmark: - when there are no more moves available during attack roll
   :checkmark: - when the are no more rolls to be made after 6 frozen dice
+:checkmark: - fix incorrect damage with attack roll
+:checkmark: - fix button showing "afslut runde" even though only one attack roll has been done
 - win/lose condition 

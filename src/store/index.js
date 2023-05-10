@@ -111,15 +111,18 @@ export default createStore({
     getInactivePlayerIndex: state => {
       return state.players.findIndex( player => player.activeTurn == false)
     },
-    getAttackRollStalled: state => {
+    getAttackRollStalled: (state, getters) => {
+      if (!state.attackDiceTarget) {
+        return false
+      }
       let validDiceCount = 0;
       for (let i = 0; i < state.dice.length; i++) {
         const dice = state.dice[i];
-        if (dice.num == state.attackDiceTarget && !dice.frozen) {
+        if (dice.num == state.attackDiceTarget) {
           validDiceCount++
         }
       }
-      return (validDiceCount == 0)
+      return ((validDiceCount == 0 && getters.getLockedDiceCount != 0) || (getters.getFrozenDiceCount == getters.getLockedDiceCount))
     }
   },
   mutations: {
@@ -239,20 +242,23 @@ export default createStore({
     endTurn({ getters, commit, dispatch }) {
       const attackDiceTarget = getters.getDiceSum-30
 
-      if (attackDiceTarget < 0) { // if the sum is less than 30, the damage themselves
+      if ((attackDiceTarget < 0 || getters.getDiceSum != 0) && !getters.getIsRollingAttack) { // if the sum is less than 30, the damage themselves
         commit('REDUCE_HEALTH', { index: getters.getActivePlayerIndex, value: attackDiceTarget })
       } else {
-        commit('REDUCE_HEALTH', { index: getters.getInactivePlayerIndex, value: -attackDiceTarget })
+        commit('REDUCE_HEALTH', { index: getters.getInactivePlayerIndex, value: -1 * getters.getDiceSum })
       }
       commit('UPDATE_ACTIVE_PLAYER', { disableIndex: getters.getActivePlayerIndex, enableIndex: getters.getInactivePlayerIndex })
       commit('SET_ATTACK_DICE_TARGET', null)
       dispatch('resetAllDice')
     },
     rollAttackDice({ dispatch, commit, getters }) {
-      const attackDiceTarget = getters.getDiceSum-30
-      commit('SET_ATTACK_DICE_TARGET', attackDiceTarget) // find out if the active players takes their own damage or if they get to attack the other player
+      if (!getters.getIsRollingAttack) {
+        commit('SET_ATTACK_DICE_TARGET', getters.getDiceSum-30) // find out if the active players takes their own damage or if they get to attack the other player
+      }
 
-      if (attackDiceTarget < 0) { // if the sum is less than 30, the damage themselves
+      if (getters.getIsRollingAttack) { 
+        dispatch('rollDice')
+      } else if (getters.getAttackDiceTarget < 0) { // if the sum is less than 30, the damage themselves
         dispatch('endTurn')
       } else { // if their sum is 30+ then let them roll attack
         dispatch('resetAllDice')
