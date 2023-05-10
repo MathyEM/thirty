@@ -2,7 +2,7 @@
   <div class="main-menu">
     <h1>Tredive</h1>
     <button @click="ToggleShowModal">Start et spil</button>
-    <ModalBox :show="getShowModal">
+    <ModalBox :show="getShowModal" :toggleShow="ToggleShowModal">
       <template v-slot:header>Start et nyt spil</template>
       <template v-slot:body>
         <p>Indtast navnene på de to spillere</p>

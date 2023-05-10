@@ -2,7 +2,8 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    showModal: true,
+    showModal: false,
+    showGameOverModal: false,
     players: [
       {
         name: "Mathias",
@@ -50,9 +51,11 @@ export default createStore({
       },
     ],
     disableDice: true,
+    gameOver: false,
   },
   getters: {
     getShowModal: state => state.showModal,
+    getShowGameOverModal: state => state.showGameOverModal,
     getPlayers: state => state.players,
     getDisableDice: state => state.disableDice,
     getFreezeQuotaMet: (state, getters) => {
@@ -111,6 +114,17 @@ export default createStore({
     getInactivePlayerIndex: state => {
       return state.players.findIndex( player => player.activeTurn == false)
     },
+    getLowestHealthPlayerIndex: state => {
+      return state.players.findIndex( player => player.score <= 0)
+    },
+    getOppositePlayerIndex (state, getters) {
+      const winner = state.players.filter((value, i) => i !== getters.getLowestHealthPlayerIndex )
+      const winnerIndex = state.players.findIndex((player) => {
+        return player.name == winner[0].name
+      })
+      
+      return winnerIndex
+    },
     getAttackRollStalled: (state, getters) => {
       if (!state.attackDiceTarget) {
         return false
@@ -123,7 +137,8 @@ export default createStore({
         }
       }
       return ((validDiceCount == 0 && getters.getLockedDiceCount != 0) || (getters.getFrozenDiceCount == getters.getLockedDiceCount))
-    }
+    },
+    getGameOver: state => state.gameOver,
   },
   mutations: {
     TOGGLE_SHOW_MODAL(state) {
@@ -131,6 +146,13 @@ export default createStore({
         state.showModal = false
       } else {
         state.showModal = true
+      }
+    },
+    TOGGLE_SHOW_GAME_OVER_MODAL(state) {
+      if (state.showGameOverModal == true) {
+        state.showGameOverModal = false
+      } else {
+        state.showGameOverModal = true
       }
     },
     UPDATE_PLAYER_NAME(state, {value, index}) {
@@ -177,10 +199,16 @@ export default createStore({
     REDUCE_HEALTH(state, {index, value}) {
       state.players[index].score = state.players[index].score + value
     },
+    UPDATE_GAME_OVER(state, { value }) {
+      state.gameOver = value
+    },
   },
   actions: {
     ToggleShowModal({ commit }) {
       commit('TOGGLE_SHOW_MODAL')
+    },
+    ToggleShowGameOverModal({ commit }) {
+      commit('TOGGLE_SHOW_GAME_OVER_MODAL')
     },
     UpdatePlayerName({ commit }, payload) {
       const index = payload.srcElement.id
@@ -239,14 +267,24 @@ export default createStore({
       commit("DISABLE_DICE")
       commit("SET_IS_ROLLING_ATTACK", false)
     },
-    endTurn({ getters, commit, dispatch }) {
-      const attackDiceTarget = getters.getDiceSum-30
-
+    checkHealth({ getters, commit, dispatch }) {
+      if (getters.getLowestHealthPlayerIndex !== -1) {
+        commit('UPDATE_GAME_OVER', { value: true })
+        dispatch('gameOver')
+      }
+    },
+    ReduceHealth({ commit, getters, dispatch }, { attackDiceTarget }) {
       if ((attackDiceTarget < 0 || getters.getDiceSum != 0) && !getters.getIsRollingAttack) { // if the sum is less than 30, the damage themselves
         commit('REDUCE_HEALTH', { index: getters.getActivePlayerIndex, value: attackDiceTarget })
       } else {
         commit('REDUCE_HEALTH', { index: getters.getInactivePlayerIndex, value: -1 * getters.getDiceSum })
       }
+      dispatch('checkHealth')
+    },
+    endTurn({ getters, commit, dispatch }) {
+      const attackDiceTarget = getters.getDiceSum-30
+
+      dispatch('ReduceHealth', { attackDiceTarget })
       commit('UPDATE_ACTIVE_PLAYER', { disableIndex: getters.getActivePlayerIndex, enableIndex: getters.getInactivePlayerIndex })
       commit('SET_ATTACK_DICE_TARGET', null)
       dispatch('resetAllDice')
@@ -265,6 +303,11 @@ export default createStore({
         commit("SET_IS_ROLLING_ATTACK", true)
         dispatch('rollDice')
       }
+    },
+    gameOver({ commit }) {
+      console.log("game over");
+      commit('UPDATE_GAME_OVER', { value: true })
+      commit('TOGGLE_SHOW_GAME_OVER_MODAL')
     },
   }
 })

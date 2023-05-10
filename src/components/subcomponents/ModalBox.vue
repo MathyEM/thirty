@@ -1,17 +1,14 @@
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   name: "ModalBox",
   props: {
     show: Boolean,
     position: String,
+    toggleShow: Function,
   },
 
   methods: {
-    ...mapActions([
-      'ToggleShowModal',
-    ]),
+
   }
 }
 </script>
@@ -25,7 +22,7 @@ export default {
             <h3>
               <slot name="header">default header</slot>
             </h3>
-            <span @click="ToggleShowModal" class="close-button">✖</span>
+            <span @click="toggleShow" class="close-button">✖</span>
           </div>
 
           <div class="modal-body">

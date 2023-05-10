@@ -18,11 +18,23 @@
     <button v-else-if="(getFreezeQuotaMet && getFrozenDiceCount != 6) || getDisableDice" @click="rollDice">Rul terninger</button>
     <button v-else disabled class="btn-disabled">Lås mindst én terning</button>
   </div>
+  <ModalBox :show="getShowGameOverModal && getGameOver" :toggleShow="ToggleShowGameOverModal">
+      <template v-slot:header>{{ getPlayers[getOppositePlayerIndex].name }} vandt!</template>
+      <template v-slot:body>
+        <p>Men vigtigst af alt... {{ getPlayers[getLowestHealthPlayerIndex].name }} tabte</p>
+        <div class="inputs">
+        </div>
+      </template>
+      <template v-slot:footer>
+        <span></span>
+      </template>
+    </ModalBox>
 </template>
 
 <script>
 import ScoreSheet from "@/components/subcomponents/ScoreSheet.vue";
 import Dice from "@/components/subcomponents/Dice.vue";
+import ModalBox from "@/components/subcomponents/ModalBox.vue";
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -30,6 +42,7 @@ export default {
   components: {
     ScoreSheet,
     Dice,
+    ModalBox,
   },
   props: {
     msg: String
@@ -43,14 +56,20 @@ export default {
       'getDisableDice',
       'getAttackRollStalled',
       'getIsRollingAttack',
-      'getAttackDiceTarget'
+      'getAttackDiceTarget',
+      'getShowGameOverModal',
+      'getLowestHealthPlayerIndex',
+      'getOppositePlayerIndex',
+      'getGameOver',
     ])
   },
   methods: {
     ...mapActions([
       'rollDice',
       'rollAttackDice',
-      'endTurn'
+      'endTurn',
+      'findOppositePlayerIndex',
+      'ToggleShowGameOverModal',
     ]),
   }
 }
