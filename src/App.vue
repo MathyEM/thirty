@@ -12,6 +12,7 @@
 
 * {
   box-sizing: border-box;
+  touch-action: manipulation;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
