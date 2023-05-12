@@ -9,11 +9,11 @@
         <div class="inputs">
           <div class="input-playername-wrapper">
             <p>Spiller 1</p>
-            <input :value="getPlayers[0].name" @input="UpdatePlayerName" type="text" name="spiller1" id="0" class="input-playername">
+            <input v-on:keyup.enter="$router.push('/score-tracking')" :value="getPlayers[0].name" @input="UpdatePlayerName" type="text" name="spiller1" id="0" class="input-playername">
           </div>
           <div class="input-playername-wrapper">
             <p>Spiller 2</p>
-            <input :value="getPlayers[1].name" @input="UpdatePlayerName" type="text" name="spiller2" id="1" class="input-playername">
+            <input v-on:keyup.enter="$router.push('/score-tracking')" :value="getPlayers[1].name" @input="UpdatePlayerName" type="text" name="spiller2" id="1" class="input-playername">
           </div>
         </div>
       </template>
