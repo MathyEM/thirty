@@ -17,12 +17,12 @@
     <button v-else-if="(getFreezeQuotaMet && getFrozenDiceCount != 6) || getDisableDice" @click="rollDice">Rul terninger</button>
     <button v-else disabled class="btn-disabled">Lås mindst én terning</button>
   </div>
-  <ModalBox :show="getShowGameOverModal && getGameOver" :toggleShow="ToggleShowGameOverModal" :closeButton="false">
+  <ModalBox :show="getShowGameOverModal && getGameOver && getLowestHealthPlayerIndex !== -1" :toggleShow="ToggleShowGameOverModal" :closeButton="false">
       <template v-slot:header>{{ getPlayers[getOppositePlayerIndex].name }} vandt!</template>
       <template v-slot:body>
+        <img class="animal-img camel" :src="camel" alt="">
         <p>Men vigtigst af alt... {{ getPlayers[getLowestHealthPlayerIndex].name }} tabte</p>
-        <div class="inputs">
-        </div>
+        <img class="animal-img dromedary" :src="dromedary" alt="">
       </template>
       <template v-slot:footer>
         <button @click="resetGame">Spil igen</button>
@@ -34,6 +34,8 @@
 import ScoreSheet from "@/components/subcomponents/ScoreSheet.vue";
 import Dice from "@/components/subcomponents/Dice.vue";
 import ModalBox from "@/components/subcomponents/ModalBox.vue";
+import camel from "@/assets/img/camel.jpg";
+import dromedary from "@/assets/img/dromedary.webp";
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -42,6 +44,12 @@ export default {
     ScoreSheet,
     Dice,
     ModalBox,
+  },
+  data() {
+    return {
+      camel,
+      dromedary,
+    }
   },
   props: {
     msg: String
@@ -110,5 +118,20 @@ export default {
 .dice-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+}
+
+.modal-body {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+  align-items: center;
+}
+
+.camel {
+  height: 5em;
+}
+
+.dromedary {
+  max-width: 5em;
 }
 </style>
